@@ -5,6 +5,7 @@ import authRoute from "./routes/authRoute.js";
 import userRoute from "./routes/userRoute.js";
 import cookieParser from "cookie-parser";
 import { protectedRoute } from "./middlewares/authMiddlewares.js";
+import cors from "cors";
 
 
 dotenv.config();
@@ -12,9 +13,13 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+// Normalize CLIENT_URL - remove trailing slash
+const CLIENT_URL = (process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/$/, '');
+
 //middlewares 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({ origin: CLIENT_URL, credentials: true }));
 
 //public routes
 app.use('/api/auth', authRoute)

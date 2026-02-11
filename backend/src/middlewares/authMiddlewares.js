@@ -28,7 +28,7 @@ export const protectedRoute = (req, res, next) => {
             next();
         });
     } catch (error) {
-        console.errorq("Lỗi khi xác minh JWT trong authMiddlewares", error);
+        console.error("Lỗi khi xác minh JWT trong authMiddlewares", error);
         return res.status(500).json({ message: "Lỗi hệ thống!!!" })
 
     }
