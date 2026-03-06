@@ -75,6 +75,20 @@ export const getConversations = async (req, res) => {
                 select: "displayName avatarUrl",
             });
 
+        // const formatted = conversations.map((convo) => {
+        //     const participants = (convo.participants || []).map((p) => ({
+        //         _id: p.userId?._id,
+        //         displayName: p.userId?.displayName,
+        //         avatarUrl: p.userId?.avatarUrl ?? null,
+        //         joinedAt: p.joinedAt,
+        //     }));
+
+        //     return {
+        //         ...convo.toObject(),
+        //         unreadCounts: convo.unreadCounts || {},
+        //         participants,
+        //     };
+        // });
         const formatted = conversations.map((convo) => {
             const participants = (convo.participants || []).map((p) => ({
                 _id: p.userId?._id,
@@ -85,6 +99,7 @@ export const getConversations = async (req, res) => {
 
             return {
                 ...convo.toObject(),
+                group: convo.group,
                 unreadCounts: convo.unreadCounts || {},
                 participants,
             };

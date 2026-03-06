@@ -1,31 +1,24 @@
-import Logout from "@/components/auth/logout"
-import { Button } from "@/components/ui/button";
-import api from "@/lib/axios";
-import { useAuthStore } from "@/stores/useAuthStore"
-import { toast } from "sonner";
+import { useEffect } from "react";
+import ChatWindowLayout from "@/components/chat/ChatWindowLayout";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { useChatStore } from "@/stores/useChatStore";
 
 const ChatAppPage = () => {
-    const user = useAuthStore((s) => s.user); //(s) => s.user : chỉ lấy đúng trường user trong store và component chỉ render khi user thay đổi 
+    const { fetchConversations } = useChatStore();
 
-    const handleOnclick = async () => {
-        try {
-            // console.log(user);
-            await api.get("/users/test", { withCredentials: true });
-            toast.success("OK");
-        } catch (error) {
-            toast.error("Thất bại");
-            console.error(error)
-
-        }
-    }
+    useEffect(() => {
+        fetchConversations();
+    }, [fetchConversations]);
 
     return (
-        <div>
-            {user?.username}
-            <Logout />
-            <Button onClick={handleOnclick}>test</Button>
-        </div>
-    )
-}
+        <SidebarProvider>
+            <AppSidebar />
+            <div className="flex h-screen w-full p-2">
+                <ChatWindowLayout />
+            </div>
+        </SidebarProvider>
+    );
+};
 
-export default ChatAppPage
+export default ChatAppPage;
