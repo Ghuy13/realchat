@@ -389,7 +389,7 @@ button:focus-visible {
   }
 
   body {
-    @apply text-slate-800 dark:text-slate-200;
+    @apply text-slate-800 dark:text-slate-200 bg-background;
   }
 }
 
@@ -409,7 +409,7 @@ button:focus-visible {
 
   /* Chat bubble variants */
   .chat-bubble-sent {
-    @apply bg-primary/80 !text-[hsl(var(--chat-bubble-sent-foreground))] shadow-[var(--shadow-bubble)];
+    @apply !bg-primary/80 !text-[hsl(var(--chat-bubble-sent-foreground))] shadow-[var(--shadow-bubble)];
   }
 
   .chat-bubble-received {
@@ -458,6 +458,12 @@ button:focus-visible {
   .shadow-bubble {
     box-shadow: var(--shadow-bubble);
   }
+
+  /* ScrollBar */
+  .beautiful-scrollbar {
+    @apply scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent dark:scrollbar-thumb-slate-600;
+  }
+
 
   /* Animations */
   .transition-bounce {

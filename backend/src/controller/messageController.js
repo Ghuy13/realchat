@@ -30,7 +30,7 @@ export const sendDirectMessage = async (req, res) => {
 
         const message = await Message.create({
             conversationId: conversation._id,
-            sendId: senderId,
+            senderId: senderId,
             content
         });
 
@@ -58,7 +58,7 @@ export const sendDGroupMessage = async (req, res) => {
 
         const message = await Message.create({
             conversationId,
-            sendId: senderId,
+            senderId: senderId,
             content
         });
 

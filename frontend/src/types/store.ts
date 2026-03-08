@@ -1,6 +1,5 @@
-import type { Conversation } from "@/types/chat";
+import type { Conversation, Message } from "@/types/chat";
 import type { User } from "./user";
-import type { Message } from "react-hook-form";
 
 export interface AuthState {
     accessToken: string | null;
@@ -41,10 +40,22 @@ export interface ChatState {
         nextCursor: string | null, // phân trang
     }>;
     activeConversationId: string | null;   //lưu id của conversation đang mở nếu user click vào chat thì giá trị sẽ được cập nhật
-    loading: boolean;                      // theo dỏi trạng thái req đã xong chưa
+    convoLoading: boolean;                      // theo dỏi trạng thái req đã xong chưa
+    messageLoading: boolean;
     reset: () => void;
 
     setActiveConversation: (id: string | null) => void; // dùng để những compoment khác cập nhật giá trị của activeConversation
     fetchConversations: () => Promise<void>;
+    fetchMessages: (conversationId?: string) => Promise<void>;
+    sendDirectMessage: (
+        recipientId: string,
+        content: string,
+        imgUrl?: string,
+    ) => Promise<void>;
+    sendGroupMessage: (
+        conversationId: string,
+        content: string,
+        imgUrl?: string,
+    ) => Promise<void>;
 
 }
