@@ -7,7 +7,7 @@ const api = axios.create({
     // Nếu đang chạy môi trường dev (npm run dev)
     // thì gọi API ở backend local (port 5001)
     // Nếu đã build production thì gọi API cùng domain (/api)
-    baseURL: import.meta.env.MODE === 'development' ? "http://localhost:5001/api" : "/api",
+    baseURL: import.meta.env.VITE_API_URL,
     withCredentials: true, // cookie sẽ được gửi lên sevrer để tránh người dùng bị logout 
 });
 

@@ -9,11 +9,11 @@ import ConversationRoute from "./routes/conversationRoute.js"
 import cookieParser from "cookie-parser";
 import { protectedRoute } from "./middlewares/authMiddlewares.js";
 import cors from "cors";
-
+import { app, server } from "./socket/index.js";
 
 dotenv.config();
 
-const app = express();
+
 const PORT = process.env.PORT || 5001;
 
 // Normalize CLIENT_URL - remove trailing slash
@@ -37,7 +37,7 @@ app.use('/api/conversations', ConversationRoute)
 
 
 connectDB().then(() => {
-    app.listen(PORT, () => {
-        console.log(`Sever bắt đầu trên cổng ${PORT}`)
+    server.listen(PORT, () => {
+        console.log(`Server bắt đầu trên cổng ${PORT}`);
     });
 });

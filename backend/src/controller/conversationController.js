@@ -75,20 +75,6 @@ export const getConversations = async (req, res) => {
                 select: "displayName avatarUrl",
             });
 
-        // const formatted = conversations.map((convo) => {
-        //     const participants = (convo.participants || []).map((p) => ({
-        //         _id: p.userId?._id,
-        //         displayName: p.userId?.displayName,
-        //         avatarUrl: p.userId?.avatarUrl ?? null,
-        //         joinedAt: p.joinedAt,
-        //     }));
-
-        //     return {
-        //         ...convo.toObject(),
-        //         unreadCounts: convo.unreadCounts || {},
-        //         participants,
-        //     };
-        // });
         const formatted = conversations.map((convo) => {
             const participants = (convo.participants || []).map((p) => ({
                 _id: p.userId?._id,
@@ -142,5 +128,19 @@ export const getMessages = async (req, res) => {
     } catch (error) {
         console.error("Lỗi xảy ra khi lấy messages", error)
         return res.status(500).json({ message: "Lỗi hệ thống" })
+    }
+};
+
+export const getUserConversationsForSocketIO = async (userId) => {
+    try {
+        const conversations = await Conversation.find(
+            { "participants.userId": userId },
+            { _id: 1 }
+        );
+
+        return conversations.map((c) => c._id.toString());
+    } catch (error) {
+        console.error('Lỗi khi fetch conversation:', error);
+        return [];
     }
 };

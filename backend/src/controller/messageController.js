@@ -1,6 +1,7 @@
 import Conversation from "../models/Conversation.js";
 import Message from "../models/Message.js";
-import { undateConversationAfterCreateMessage } from "../utils/messageHelper.js";
+import { emitNewMessage, undateConversationAfterCreateMessage } from "../utils/messageHelper.js";
+import { io } from "../socket/index.js";
 
 export const sendDirectMessage = async (req, res) => {
     try {
@@ -38,6 +39,9 @@ export const sendDirectMessage = async (req, res) => {
 
         await conversation.save();
 
+        emitNewMessage(io, conversation, message);
+
+
         return res.status(201).json({ message });
 
     } catch (error) {
@@ -65,6 +69,8 @@ export const sendDGroupMessage = async (req, res) => {
         undateConversationAfterCreateMessage(conversation, message, senderId);
 
         await conversation.save();
+
+        emitNewMessage(io, conversation, message);
 
         return res.status(201).json({ message });
     } catch (error) {
