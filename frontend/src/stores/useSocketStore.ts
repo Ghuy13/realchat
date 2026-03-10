@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { io, Socket } from "socket.io-client";
 import { useAuthStore } from "./useAuthStore";
 import type { SocketState } from "@/types/store";
-import { use } from "react";
 import { useChatStore } from "./useChatStore";
 
 const baseUrl = import.meta.env.VITE_SOCKET_URL;
@@ -55,11 +54,24 @@ export const useSocketStore = create<SocketState>((set, get) => ({
             };
 
             if (useChatStore.getState().activeConversationId === message.conversationId) {
-                // đánh dấu đã đọc
-                // useChatStore.getState().markAsSeen();
+                useChatStore.getState().markAsSeen(); // đánh dấu đã đọc
             }
             useChatStore.getState().updateConversation(updatedConversation);
-        })
+        });
+
+        //read message
+        socket.on("read-message", ({ conversation, lastMessage }) => {
+            const updated = {
+                _id: conversation._id,
+                lastMessage,
+                lastMessageAt: conversation.lastMessageAt,
+                unreadCounts: conversation.unreadCounts,
+                seenBy: conversation.seenBy,
+            };
+
+            useChatStore.getState().updateConversation(updated); // cập nhật covo trong store
+        });
+
     },
 
     disconnectSocket: () => {

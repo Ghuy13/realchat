@@ -34,6 +34,10 @@ export const undateConversationAfterCreateMessage = async (conversation, message
 };
 
 export const emitNewMessage = (io, conversation, message) => {
+    const unreadCountsObj = conversation.unreadCounts instanceof Map ?
+        Object.fromEntries(conversation.unreadCounts) :
+        conversation.unreadCounts;
+
     io.to(conversation._id.toString()).emit("new-message", {
         message,
         conversation: {
@@ -41,6 +45,6 @@ export const emitNewMessage = (io, conversation, message) => {
             lastMessage: conversation.lastMessage,
             lastMessageAt: conversation.lastMessageAt,
         },
-        unreadCounts: conversation.unreadCounts,
+        unreadCounts: unreadCountsObj,
     });
 };

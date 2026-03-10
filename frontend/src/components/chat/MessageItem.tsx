@@ -31,7 +31,7 @@ const MessageItem = ({
     const isGroupBreak = isShowTime || message.senderId !== prev?.senderId;
 
     const participant = selectedConvo.participants.find(
-        (p: Participant) => p._id?.toString() === message.senderId?.toString()
+        (p: Participant) => p._id.toString() === message.senderId.toString()
     );
 
     return (
