@@ -28,6 +28,7 @@ const MessageItem = ({
         new Date(prev?.createdAt || 0).getTime() >
         300000; // 5 phút
 
+
     const isGroupBreak = isShowTime || message.senderId !== prev?.senderId;
 
     const participant = selectedConvo.participants.find(
@@ -35,56 +36,58 @@ const MessageItem = ({
     );
 
     return (
-        <div className={cn("flex gap-2 message-bounce mt-1", message.isOwn ? "justify-end" : "justify-start")}>
-            {/* Avatar */}
-            {!message.isOwn && (
-                <div className="w-8">
-                    {isGroupBreak && (
-                        <UserAvatar
-                            type="chat"
-                            name={participant?.displayName ?? "Realchat"}
-                            avatarUrl={participant?.avatarUrl ?? undefined}
-                        />
-                    )}
-                </div>
+        <>
+            {/* Time */}
+            {isGroupBreak && (
+                <span className="text-xs text-muted-foreground px-1 text-center block">
+                    {formatMessageTime(new Date(message.createdAt))}
+                </span>
             )}
-            {/* tin nhắn */}
-            <div
-                className={cn(
-                    "max-w-xs lg:max-w-md space-y-1 flex flex-col",
-                    message.isOwn ? "items-end" : "items-start"
+            <div className={cn("flex gap-2 message-bounce mt-1", message.isOwn ? "justify-end" : "justify-start")}>
+                {/* Avatar */}
+                {!message.isOwn && (
+                    <div className="w-8">
+                        {isGroupBreak && (
+                            <UserAvatar
+                                type="chat"
+                                name={participant?.displayName ?? "Realchat"}
+                                avatarUrl={participant?.avatarUrl ?? undefined}
+                            />
+                        )}
+                    </div>
                 )}
-            >
-                <Card
+                {/* tin nhắn */}
+                <div
                     className={cn(
-                        "p-3",
-                        message.isOwn ? "chat-bubble-sent border-0" : "chat-bubble-received"
+                        "max-w-xs lg:max-w-md space-y-1 flex flex-col",
+                        message.isOwn ? "items-end" : "items-start"
                     )}
                 >
-                    <p className="text-sm leading-relaxed break-words">{message.content}</p>
-                </Card>
-
-                {/* Time */}
-                {isGroupBreak && (
-                    <span className="text-xs text-muted-foreground px-1">
-                        {formatMessageTime(new Date(message.createdAt))}
-                    </span>
-                )}
-
-                {/* Seen/Delivered */}
-                {message.isOwn && message._id === selectedConvo.lastMessage?._id && lastMessageStatus === "seen" && (
-                    <Badge
-                        variant="outline"
-                        className={cn("text-xs px-1.5 py-0.5 h-4 border-0",
-                            "bg-primary/20 text-primary"
+                    <Card
+                        className={cn(
+                            "p-3",
+                            message.isOwn ? "chat-bubble-sent border-0" : "chat-bubble-received"
                         )}
                     >
-                        {lastMessageStatus}
-                    </Badge>
-                )}
+                        <p className="text-sm leading-relaxed break-words">{message.content}</p>
+                    </Card>
 
+                    {/* Seen/Delivered */}
+                    {message.isOwn && message._id === selectedConvo.lastMessage?._id && lastMessageStatus === "seen" && (
+                        <Badge
+                            variant="outline"
+                            className={cn("text-xs px-1.5 py-0.5 h-4 border-0",
+                                "bg-primary/20 text-primary"
+                            )}
+                        >
+                            {lastMessageStatus}
+                        </Badge>
+                    )}
+
+                </div>
             </div>
-        </div>
+        </>
+
     )
 };
 
