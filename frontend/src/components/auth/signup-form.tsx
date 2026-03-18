@@ -70,7 +70,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
                   />
                   {/* thông báo lỗi khi không nhập Họ vào */}
                   {errors.lastname && (
-                    <p className="text-destructive text-sm"> {errors.lastname.message} </p>
+                    <p className="error-message"> {errors.lastname.message} </p>
                   )}
                 </div>
                 <div className="space-y-2">
@@ -82,7 +82,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
                   />
                   {/* thông báo lỗi khi không nhập Họ vào */}
                   {errors.firstname && (
-                    <p className="text-destructive text-sm"> {errors.firstname.message} </p>
+                    <p className="error-message"> {errors.firstname.message} </p>
                   )}
                 </div>
               </div>
@@ -98,7 +98,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
                     {...register("username")}
                   />
                   {errors.username && (
-                    <p className="text-destructive text-sm"> {errors.username.message} </p>
+                    <p className="error-message"> {errors.username.message} </p>
                   )}
                 </div>
               </div>
@@ -113,7 +113,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
                     {...register("email")}
                   />
                   {errors.email && (
-                    <p className="text-destructive text-sm"> {errors.email.message} </p>
+                    <p className="error-message"> {errors.email.message} </p>
                   )}
                 </div>
                 {/* password */}
@@ -126,7 +126,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
                       {...register("password")}
                     />
                     {errors.password && (
-                      <p className="text-destructive text-sm"> {errors.password.message} </p>
+                      <p className="error-message"> {errors.password.message} </p>
                     )}
                   </div>
                   {/* nút đăng ký */}

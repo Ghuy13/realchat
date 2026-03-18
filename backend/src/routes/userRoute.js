@@ -1,10 +1,10 @@
 import express from "express";
-import { authMe, test } from "../controller/userController.js";
+import { authMe, searchUserByUsername, } from "../controller/userController.js";
 
 const router = express.Router();
 
 router.get("/me", authMe);
 
-router.get("/test", test);
+router.get("/search", searchUserByUsername)
 
 export default router;

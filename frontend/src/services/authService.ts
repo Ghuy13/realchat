@@ -10,7 +10,7 @@ export const authService = {
     ) => {
         const res = await api.post(
             "/auth/signup",
-            { username, password, email, firstname, lastname },
+            { username, password, email, firstName: firstname, lastName: lastname },
             {
                 withCredentials: true,
                 headers: { 'Content-Type': 'application/json' }
