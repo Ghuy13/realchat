@@ -82,4 +82,17 @@ export const useFriendStore = create<FriendState>((set, get) => ({
         }
     },
 
+    getFriends: async () => {
+        try {
+            set({ loading: true });
+            const friends = await friendService.getFriendList();
+            set({ friends: friends });
+        } catch (error) {
+            console.error("Lỗi xảy ra khi load friends", error);
+            set({ friends: [] });
+        } finally {
+            set({ loading: false });
+        }
+    },
+
 }));
