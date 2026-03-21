@@ -43,6 +43,8 @@ export interface ChatState {
     activeConversationId: string | null;   //lưu id của conversation đang mở nếu user click vào chat thì giá trị sẽ được cập nhật
     convoLoading: boolean;                      // theo dỏi trạng thái req đã xong chưa
     messageLoading: boolean;
+    loading: boolean;
+
     reset: () => void;
 
     setActiveConversation: (id: string | null) => void; // dùng để những compoment khác cập nhật giá trị của activeConversation

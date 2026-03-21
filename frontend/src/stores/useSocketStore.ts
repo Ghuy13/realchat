@@ -72,6 +72,11 @@ export const useSocketStore = create<SocketState>((set, get) => ({
             useChatStore.getState().updateConversation(updated); // cập nhật covo trong store
         });
 
+        //new group
+        socket.on("new-group", (conversation) => {
+            useChatStore.getState().addConvo(conversation);
+            socket.emit("join-conversation", conversation._id);
+        });
     },
 
     disconnectSocket: () => {

@@ -37,7 +37,9 @@ io.on("connection", async (socket) => {
 
     socket.on("join-conversation", (conversationId) => {
         socket.join(conversationId);
-    })
+    });
+
+    socket.join(user._id.toString()); //tạo phòng theo userId
 
 
     socket.on("disconnect", () => {
