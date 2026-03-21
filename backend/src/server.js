@@ -10,6 +10,8 @@ import cookieParser from "cookie-parser";
 import { protectedRoute } from "./middlewares/authMiddlewares.js";
 import cors from "cors";
 import { app, server } from "./socket/index.js";
+import { v2 as cloudinary } from 'cloudinary';
+
 
 dotenv.config();
 
@@ -23,6 +25,14 @@ const CLIENT_URL = (process.env.CLIENT_URL || 'http://localhost:5173').replace(/
 app.use(cors({ origin: CLIENT_URL, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
+
+// Configuration
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 
 //public routes
 app.use('/api/auth', authRoute);
