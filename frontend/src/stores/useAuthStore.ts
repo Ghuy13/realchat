@@ -18,6 +18,10 @@ export const useAuthStore = create<AuthState>()(
             set({ accessToken });
         },
 
+        setUser: (user) => {
+            set({ user })
+        },
+
         // clearState reset toàn bộ state về lại giá trị mặc định
         clearState: () => {
             set({ accessToken: null, user: null, loading: false });

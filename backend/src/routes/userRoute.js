@@ -7,6 +7,6 @@ const router = express.Router();
 
 router.get("/me", authMe);
 router.get("/search", searchUserByUsername)
-router.post("/uploadAvatar", upload.single("file", uploadAvatar))
+router.post("/uploadAvatar", upload.single("file"), uploadAvatar)
 
 export default router;

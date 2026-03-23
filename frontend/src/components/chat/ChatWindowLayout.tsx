@@ -1,18 +1,22 @@
 import { useChatStore } from "@/stores/useChatStore";
 import ChatWelcomeScreen from "./ChatWelcomeScreen";
-import ChatWindowSkeleton from "./ChatWindowSkeleton";
 import { SidebarInset } from "../ui/sidebar";
 import ChatWindowHeader from "./ChatWindowHeader";
 import ChatWindowBody from "./ChatWindowBody";
 import MessageInput from "./MessageInput";
 import { useEffect } from "react";
-
+import ChatWindowSkeleton from "../skeleton/ChatWindowSkeleton";
 
 const ChatWindowLayout = () => {
+    const {
+        activeConversationId,
+        conversations,
+        messageLoading: loading,
+        markAsSeen,
+    } = useChatStore();
 
-    const { activeConversationId, conversations, messageLoading: loading, messages, markAsSeen } = useChatStore();
-
-    const selectedConvo = conversations.find((c) => c._id === activeConversationId) ?? null;
+    const selectedConvo =
+        conversations.find((c) => c._id === activeConversationId) ?? null;
 
     useEffect(() => {
         if (!selectedConvo) {
@@ -23,20 +27,19 @@ const ChatWindowLayout = () => {
             try {
                 await markAsSeen();
             } catch (error) {
-                console.error("Lỗi khi markSeen", error)
+                console.error("Lỗi khi markSeen", error);
             }
-        }
+        };
+
         markSeen();
     }, [markAsSeen, selectedConvo]);
 
-
-    //chưa có conversations nào thì render <ChatWelcomeScreen />
     if (!selectedConvo) {
-        return <ChatWelcomeScreen />
+        return <ChatWelcomeScreen />;
     }
 
     if (loading) {
-        return <ChatWindowSkeleton />
+        return <ChatWindowSkeleton />;
     }
 
     return (
@@ -51,7 +54,6 @@ const ChatWindowLayout = () => {
 
             {/* Footer */}
             <MessageInput selectedConvo={selectedConvo} />
-
         </SidebarInset>
     );
 };

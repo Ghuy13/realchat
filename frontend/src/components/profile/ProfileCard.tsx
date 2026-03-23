@@ -4,7 +4,8 @@ import UserAvatar from "../chat/UserAvatar";
 import { Badge } from "../ui/badge";
 import { cn } from "@/lib/utils";
 import { useSocketStore } from "@/stores/useSocketStore";
-// import AvatarUploader from "./AvatarUploader";
+import AvatarUploader from "./AvatarUploader";
+
 
 interface ProfileCardProps {
     user: User | null;
@@ -32,6 +33,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
                     />
 
                     {/* <AvatarUploader /> */}
+                    <AvatarUploader />
                 </div>
 
                 {/* user info */}

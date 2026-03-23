@@ -1,4 +1,6 @@
 import multer from "multer"; // thư viện nhận và xử lý file upload từ form lên server
+import { v2 as cloudinary } from "cloudinary";
+
 
 export const upload = multer({
     storage: multer.memoryStorage(),
