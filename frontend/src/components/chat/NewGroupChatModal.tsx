@@ -70,7 +70,7 @@ const NewGroupChatModal = () => {
                 </Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-[425px] border-none ">
+            <DialogContent className="sm:max-w-106.25 border-none ">
                 <DialogHeader>
                     <DialogTitle className="capitalize">tạo nhóm chat mới</DialogTitle>
                 </DialogHeader>
