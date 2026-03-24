@@ -22,9 +22,9 @@ const PORT = process.env.PORT || 5001;
 const CLIENT_URL = (process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/$/, '');
 
 //middlewares 
-app.use(cors({ origin: CLIENT_URL, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
 // Configuration
 cloudinary.config({
