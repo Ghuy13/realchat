@@ -15,6 +15,7 @@ const ChatWindowLayout = () => {
         markAsSeen,
     } = useChatStore();
 
+
     const selectedConvo =
         conversations.find((c) => c._id === activeConversationId) ?? null;
 

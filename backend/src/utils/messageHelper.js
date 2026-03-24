@@ -9,7 +9,7 @@ export const undateConversationAfterCreateMessage = async (conversation, message
         lastMessageAt: message.createdAt,
         lastMessage: {
             _id: message._id,
-            content: message.content,
+            content: message.content || (message.imgUrl ? "📷 Hình ảnh" : ""),
             senderId,
             createdAt: message.createdAt
         },

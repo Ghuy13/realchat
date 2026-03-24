@@ -2,6 +2,7 @@ import Conversation from "../models/Conversation.js";
 import Message from "../models/Message.js";
 import { emitNewMessage, undateConversationAfterCreateMessage } from "../utils/messageHelper.js";
 import { io } from "../socket/index.js";
+import { uploadMessageImageFromBuffer } from "../middlewares/uploadMidlewares.js";
 
 export const sendDirectMessage = async (req, res) => {
     try {
@@ -11,8 +12,8 @@ export const sendDirectMessage = async (req, res) => {
         // let conversationId;
         // lưu thông tin cuộc trò truyện
         let conversation;
-        if (!content) {
-            return res.status(400).json({ message: 'Thiếu nội dung' })
+        if (!content && !req.file) {
+            return res.status(400).json({ message: 'Thiếu nội dung hoặc ảnh' })
         }
         if (conversationId) {
             conversation = await Conversation.findById(conversationId)
@@ -29,10 +30,17 @@ export const sendDirectMessage = async (req, res) => {
             })
         }
 
+        let imgUrl = null;
+        if (req.file) {
+            const uploadResult = await uploadMessageImageFromBuffer(req.file.buffer);
+            imgUrl = uploadResult.secure_url;
+        }
+
         const message = await Message.create({
             conversationId: conversation._id,
             senderId: senderId,
-            content
+            content: content || null,
+            imgUrl
         });
 
         undateConversationAfterCreateMessage(conversation, message, senderId);
@@ -56,14 +64,21 @@ export const sendDGroupMessage = async (req, res) => {
         const senderId = req.user._id;
         const conversation = req.conversation;
 
-        if (!content) {
-            return res.status(400).json({ message: 'Thiếu nội dung' })
+        if (!content && !req.file) {
+            return res.status(400).json({ message: 'Thiếu nội dung hoặc ảnh' })
+        }
+
+        let imgUrl = null;
+        if (req.file) {
+            const uploadResult = await uploadMessageImageFromBuffer(req.file.buffer);
+            imgUrl = uploadResult.secure_url;
         }
 
         const message = await Message.create({
             conversationId,
             senderId: senderId,
-            content
+            content: content || null,
+            imgUrl
         });
 
         undateConversationAfterCreateMessage(conversation, message, senderId);

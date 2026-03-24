@@ -16,13 +16,13 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
     if (!user) return;
 
     if (!user.bio) {
-        user.bio = "Will code for food 🍁";
+        user.bio = "Mình xinh chào các bạn rất vui khi được trò chuyện cùng nhau 🍁🍁🍁";
     }
 
     const isOnline = onlineUsers.includes(user._id) ? true : false;
 
     return (
-        <Card className="overflow-hidden p-0 h-52 bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500">
+        <Card className="overflow-hidden p-0 h-52 bg-linear-to-r from-blue-500 via-cyan-400 to-teal-400">
             <CardContent className="mt-20 pb-8 flex flex-col sm:flex-row items-center sm:items-end gap-6">
                 <div className="relative">
                     <UserAvatar

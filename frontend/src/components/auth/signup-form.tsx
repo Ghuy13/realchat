@@ -53,7 +53,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
               {/* header - logo */}
               <div className="flex flex-col items-center text-center gap-2 ">
                 <a href="/" className="mx-auto block w-fit text-center">
-                  <img src="/logo.svg" alt="logo" className="w-16 h-16" />
+                  <img src="/logo.png" alt="logo" className="w-30 h-30" />
                 </a>
                 <h1 className="text-2xl font-bold"> Tạo tài khoản REALCHAT</h1>
                 <p className="text-muted-foreground text-balance">Chào mừng bạn hãy đăng ký để bắt đầu</p>
@@ -149,7 +149,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
             <img
               src="/placeholderSignUp.png"
               alt="Image"
-              className="absolute top-1/2 -translate-y-1/2  object-cover"
+              className="absolute top-1/2 -translate-y-1/2  object-cover  "
             />
           </div>
         </CardContent>

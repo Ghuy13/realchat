@@ -28,3 +28,36 @@ export const uploadImageFromBuffer = (buffer, options) => {
         uploadStream.end(buffer);
     });
 };
+
+export const uploadMessageImageFromBuffer = (buffer) => {
+    return new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream({
+            folder: "real_chat/messages",
+            resource_type: "image",
+            // Không crop, giữ nguyên kích thước
+        },
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            }
+        );
+        uploadStream.end(buffer);
+    });
+};
+
+export const uploadMessageImage = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 1024 * 1024 * 10, // 10MB cho ảnh message
+    },
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Chỉ chấp nhận file ảnh'), false);
+        }
+    },
+});

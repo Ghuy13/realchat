@@ -81,10 +81,10 @@ export const useChatStore = create<ChatState>()(
                     set({ messageLoading: false })
                 }
             },
-            sendDirectMessage: async (recipientId, content, imgUrl) => {
+            sendDirectMessage: async (recipientId, content, imgUrl, file) => {
                 try {
                     const { activeConversationId } = get();
-                    await chatService.sendDirectMessage(recipientId, content, imgUrl, activeConversationId || undefined);
+                    await chatService.sendDirectMessage(recipientId, content, imgUrl, activeConversationId || undefined, file);
                     set((state) => ({
                         conversations: state.conversations.map((c) => c._id === activeConversationId ? { ...c, seenBy: [] } : c),
                     }))
@@ -92,9 +92,9 @@ export const useChatStore = create<ChatState>()(
                     console.error("Lỗi xảy ra khi sendDirectMessage:", error);
                 }
             },
-            sendGroupMessage: async (conversationId, content, imgUrl) => {
+            sendGroupMessage: async (conversationId, content, imgUrl, file) => {
                 try {
-                    await chatService.sendGroupMessage(conversationId, content, imgUrl);
+                    await chatService.sendGroupMessage(conversationId, content, imgUrl, file);
                     set((state) => ({
                         conversations: state.conversations.map((c) => c._id === get().activeConversationId ? { ...c, seenBy: [] } : c)
                     }))
