@@ -25,6 +25,7 @@ const CLIENT_URL = (process.env.CLIENT_URL || 'http://localhost:5173').replace(/
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+// app.use(cors({ origin: CLIENT_URL, credentials: true }));
 
 // Configuration
 cloudinary.config({

@@ -84,22 +84,28 @@ export const useChatStore = create<ChatState>()(
             sendDirectMessage: async (recipientId, content, imgUrl, file) => {
                 try {
                     const { activeConversationId } = get();
-                    await chatService.sendDirectMessage(recipientId, content, imgUrl, activeConversationId || undefined, file);
+                    const sentMessage = await chatService.sendDirectMessage(recipientId, content, imgUrl, activeConversationId || undefined, file);
+
                     set((state) => ({
                         conversations: state.conversations.map((c) => c._id === activeConversationId ? { ...c, seenBy: [] } : c),
                     }))
+                    return sentMessage;
                 } catch (error) {
                     console.error("Lỗi xảy ra khi sendDirectMessage:", error);
+                    throw error;
                 }
             },
             sendGroupMessage: async (conversationId, content, imgUrl, file) => {
                 try {
-                    await chatService.sendGroupMessage(conversationId, content, imgUrl, file);
+                    const sentMessage = await chatService.sendGroupMessage(conversationId, content, imgUrl, file);
+
                     set((state) => ({
                         conversations: state.conversations.map((c) => c._id === get().activeConversationId ? { ...c, seenBy: [] } : c)
                     }))
+                    return sentMessage;
                 } catch (error) {
                     console.error("Lỗi xảy ra khi sendGroupMessage:", error);
+                    throw error;
                 }
             },
             addMessage: async (message) => {
@@ -118,15 +124,24 @@ export const useChatStore = create<ChatState>()(
                         prevItems = get().messages[convoId]?.items ?? [];
                     }
                     set((state) => {
+                        // Dedupe by server message ID
                         if (prevItems.some((m) => m._id === message._id)) {
                             return state;
                         }
+
+                        // Nếu có tin nhắn tạm của mình trùng content, đè lên
+                        const filtered = prevItems.filter((m) => {
+                            if (m.isTemp && m.senderId === message.senderId && m.content === message.content) {
+                                return false;
+                            }
+                            return true;
+                        });
 
                         return {
                             messages: {
                                 ...state.messages,
                                 [convoId]: {
-                                    items: [...prevItems, message],
+                                    items: [...filtered, message],
                                     hasMore: state.messages[convoId].hasMore,
                                     nextCursor: state.messages[convoId]?.nextCursor ?? null
                                 },
@@ -136,6 +151,68 @@ export const useChatStore = create<ChatState>()(
                 } catch (error) {
                     console.error("Lỗi xảy ra khi addMessage:", error);
                 }
+            },
+            addTempMessage: (message) => {
+                const convoId = message.conversationId;
+                set((state) => {
+                    const prevItems = state.messages[convoId]?.items ?? [];
+                    return {
+                        messages: {
+                            ...state.messages,
+                            [convoId]: {
+                                items: [...prevItems, message],
+                                hasMore: state.messages[convoId]?.hasMore ?? false,
+                                nextCursor: state.messages[convoId]?.nextCursor ?? null
+                            },
+                        },
+                    };
+                });
+            },
+            replaceTempMessage: (tempId, realMessage) => {
+                const convoId = realMessage.conversationId;
+                set((state) => {
+                    const prevItems = state.messages[convoId]?.items ?? [];
+
+                    // Nếu message thực đã tồn tại (vì socket push), chỉ xóa tạm
+                    const existIndex = prevItems.findIndex((m) => m._id === realMessage._id);
+                    let nextItems = prevItems;
+                    if (existIndex >= 0) {
+                        nextItems = prevItems.filter((m) => m._id !== tempId);
+                    } else {
+                        nextItems = prevItems.map((m) =>
+                            m._id === tempId ? { ...realMessage, isOwn: true, tempId: m.tempId } : m
+                        );
+                    }
+
+                    return {
+                        messages: {
+                            ...state.messages,
+                            [convoId]: {
+                                items: nextItems,
+                                hasMore: state.messages[convoId]?.hasMore ?? false,
+                                nextCursor: state.messages[convoId]?.nextCursor ?? null
+                            },
+                        },
+                    };
+                });
+            },
+            removeTempMessage: (tempId) => {
+                const convoId = get().activeConversationId;
+                if (!convoId) return;
+                set((state) => {
+                    const prevItems = state.messages[convoId]?.items ?? [];
+                    const newItems = prevItems.filter((m) => m._id !== tempId);
+                    return {
+                        messages: {
+                            ...state.messages,
+                            [convoId]: {
+                                items: newItems,
+                                hasMore: state.messages[convoId]?.hasMore ?? false,
+                                nextCursor: state.messages[convoId]?.nextCursor ?? null
+                            },
+                        },
+                    };
+                });
             },
             updateConversation: (conversation) => {
                 set((state) => ({

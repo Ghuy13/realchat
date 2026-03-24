@@ -63,19 +63,42 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
         setValue("");
         removePreview();
 
+        // Create temporary message for instant UI update
+        const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        const tempMessage = {
+            _id: tempId, // temporary ID
+            tempId,
+            conversationId: selectedConvo._id,
+            senderId: user._id,
+            content: currValue || null,
+            imgUrl: currFile ? URL.createObjectURL(currFile) : null, // temporary URL for preview
+            createdAt: new Date().toISOString(),
+            isOwn: true,
+            isTemp: true, // flag to identify temporary messages
+        };
+
+        // Add temporary message immediately to UI
+        useChatStore.getState().addTempMessage(tempMessage);
+
         setUploading(true);
 
         try {
             if (selectedConvo.type === "direct") {
                 const participants = selectedConvo.participants;
                 const otherUser = participants.filter((p) => p._id !== user._id)[0];
-                await sendDirectMessage(otherUser._id, currValue, undefined, currFile);
+                const realMessage = await sendDirectMessage(otherUser._id, currValue, undefined, currFile);
+                // Replace temp message with real one
+                useChatStore.getState().replaceTempMessage(tempMessage._id, realMessage);
             } else {
-                await sendGroupMessage(selectedConvo._id, currValue, undefined, currFile);
+                const realMessage = await sendGroupMessage(selectedConvo._id, currValue, undefined, currFile);
+                // Replace temp message with real one
+                useChatStore.getState().replaceTempMessage(tempMessage._id, realMessage);
             }
         } catch (error) {
             console.error(error);
             toast.error("Gửi tin nhắn thất bại. Bạn hãy thử lại!");
+            // Remove temp message on error
+            useChatStore.getState().removeTempMessage(tempMessage._id);
             // Restore state on error
             setValue(currValue);
             if (currFile) {

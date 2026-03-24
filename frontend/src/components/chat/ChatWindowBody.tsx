@@ -115,7 +115,7 @@ const ChatWindowBody = () => {
                 >
                     {reversedMessages.map((message, index) => (
                         <MessageItem
-                            key={message._id ?? index}
+                            key={message.tempId ?? message._id ?? `msg-${index}-${message.createdAt}`}
                             message={message}
                             index={index}
                             messages={reversedMessages}

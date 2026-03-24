@@ -34,6 +34,32 @@ export const useSocketStore = create<SocketState>((set, get) => ({
 
         // new message
         socket.on("new-message", ({ message, conversation, unreadCounts }) => {
+            const currentUserId = useAuthStore.getState().user?._id;
+
+            // Bỏ qua message của chính client để tránh blink/duplicate do cả API và socket đều trả về
+            if (message.senderId === currentUserId) {
+                // Vẫn update conversation lastMessage/unread nếu cần, nhưng không push message mới
+                const lastMessage = {
+                    _id: conversation.lastMessage._id,
+                    content: conversation.lastMessage.content,
+                    createdAt: conversation.lastMessage.createdAt,
+                    sender: {
+                        _id: conversation.lastMessage.senderId,
+                        displayName: "",
+                        avatarUrl: null,
+                    },
+                };
+
+                const updatedConversation = {
+                    ...conversation,
+                    lastMessage,
+                    unreadCounts,
+                };
+
+                useChatStore.getState().updateConversation(updatedConversation);
+                return;
+            }
+
             useChatStore.getState().addMessage(message);
 
             const lastMessage = {
