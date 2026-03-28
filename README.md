@@ -154,4 +154,3 @@ Frontend mặc định chạy tại `http://localhost:5173`.
 - Cookie refresh token được set `httpOnly` + `secure` + `sameSite: none`, phù hợp khi frontend/backend tách domain qua HTTPS.
 - Khi deploy, cập nhật đầy đủ biến môi trường cho cả frontend và backend.
 
-Nếu bạn muốn, mình có thể viết thêm phần **Docker Compose** để chạy MongoDB + backend + frontend bằng một lệnh.
