@@ -2,6 +2,10 @@
 
 Ứng dụng chat realtime full-stack với **React + TypeScript** ở frontend và **Node.js + Express + Socket.IO + MongoDB** ở backend.
 
+## Demo Account:
+username: huy03
+password: 123456
+
 ## Tính năng chính
 
 - Đăng ký, đăng nhập, đăng xuất với JWT (access token) + refresh token (cookie httpOnly).
