@@ -8,6 +8,19 @@ import Session from "../models/Session.js";
 const ACCESS_TOKEN_TTL = "30m"; // thuờng là dưới 15m
 const REFRESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000; // 14 ngày
 
+// Validate email format
+const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+};
+
+// Validate password strength
+// Min 8 chars, at least 1 uppercase, 1 lowercase, 1 number, 1 special char
+const isStrongPassword = (password) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+};
+
 export const signUp = async (req, res) => {
     try {
         const { username, password, email, firstName, lastName } = req.body;
@@ -15,6 +28,20 @@ export const signUp = async (req, res) => {
         if (!username || !password || !email || !firstName || !lastName) {
             return res.status(400).json({
                 message: "Không thể thiếu username, password, email, firstName, và lastName",
+            });
+        }
+
+        // Validate email format
+        if (!isValidEmail(email)) {
+            return res.status(400).json({
+                message: "Email không hợp lệ",
+            });
+        }
+
+        // Validate password strength
+        if (!isStrongPassword(password)) {
+            return res.status(400).json({
+                message: "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt (@$!%*?&)",
             });
         }
 

@@ -43,7 +43,7 @@ export const useAuthStore = create<AuthState>()(
             }
         },
 
-        signIn: async (username, password) => {
+        signIn: async (username: string, password: string): Promise<boolean> => {
             try {
                 get().clearState();
                 set({ loading: true });
@@ -58,9 +58,11 @@ export const useAuthStore = create<AuthState>()(
                 useChatStore.getState().fetchConversations();
 
                 toast.success("Chào mừng bạn quay lại với REALCHAT");
+                return true; // Return true on success
             } catch (error) {
                 console.error(error);
                 toast.error("Đăng nhập thất bại!");
+                return false; // Return false on error
             } finally {
                 set({ loading: false });
             }
